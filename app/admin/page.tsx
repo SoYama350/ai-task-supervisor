@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -21,7 +21,7 @@ interface AdminStats {
     dailyUsage: { log_date: string; total_tokens: number; ai_calls: number; tasks_created: number }[];
 }
 
-export default function AdminPage() {
+function AdminDashboard() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -32,23 +32,31 @@ export default function AdminPage() {
 
     useEffect(() => {
         const s = searchParams.get('secret');
-        if (s) { setSecret(s); authenticate(s); }
-    }, []);
+        if (s) {
+            setSecret(s);
+            authenticate(s);
+        }
+    }, [searchParams]);
 
     async function authenticate(s?: string) {
         const sec = s ?? secret;
         setLoading(true);
         setError(null);
-        const res = await fetch(`/api/admin/stats?secret=${encodeURIComponent(sec)}`);
-        if (!res.ok) {
-            setError('Invalid admin secret');
+        try {
+            const res = await fetch(`/api/admin/stats?secret=${encodeURIComponent(sec)}`);
+            if (!res.ok) {
+                setError('Invalid admin secret');
+                setLoading(false);
+                return;
+            }
+            const data = await res.json();
+            setStats(data);
+            setAuthed(true);
+        } catch (err) {
+            setError('Failed to authenticate');
+        } finally {
             setLoading(false);
-            return;
         }
-        const data = await res.json();
-        setStats(data);
-        setAuthed(true);
-        setLoading(false);
     }
 
     async function toggleFlag(key: string, currentEnabled: boolean) {
@@ -196,5 +204,13 @@ export default function AdminPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function AdminPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <AdminDashboard />
+        </Suspense>
     );
 }
