@@ -59,7 +59,7 @@ Guidelines:
         urgency: object.urgency,
         importance: object.importance,
         quadrant,
-        promptTokens: usage.promptTokens,
-        completionTokens: usage.completionTokens,
+        promptTokens: usage.promptTokens ?? 0,
+        completionTokens: usage.completionTokens ?? 0,
     };
 }

@@ -67,7 +67,7 @@ Return all task IDs in your recommended order.`,
 
     return {
         plan,
-        promptTokens: usage.promptTokens,
-        completionTokens: usage.completionTokens,
+        promptTokens: usage.promptTokens ?? 0,
+        completionTokens: usage.completionTokens ?? 0,
     };
 }
