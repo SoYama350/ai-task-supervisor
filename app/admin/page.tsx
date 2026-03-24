@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -22,6 +22,14 @@ interface AdminStats {
 }
 
 export default function AdminPage() {
+    return (
+        <Suspense fallback={<div>Loading dashboard...</div>}>
+            <AdminDashboard />
+        </Suspense>
+    );
+}
+
+function AdminDashboard() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -32,7 +40,10 @@ export default function AdminPage() {
 
     useEffect(() => {
         const s = searchParams.get('secret');
-        if (s) { setSecret(s); authenticate(s); }
+        if (s) {
+            setSecret(s);
+            authenticate(s);
+        }
     }, []);
 
     async function authenticate(s?: string) {
