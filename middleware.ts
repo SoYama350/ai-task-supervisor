@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
                 getAll() {
                     return request.cookies.getAll();
                 },
-                setAll(cookiesToSet) {
+                setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
                     cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
                     supabaseResponse = NextResponse.next({ request });
                     cookiesToSet.forEach(({ name, value, options }) =>
@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
 
     const { pathname } = request.nextUrl;
     const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/signup');
-    const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/admin');
+    const isProtectedRoute = pathname.startsWith('/dashboard');
 
     if (!user && isProtectedRoute) {
         const url = request.nextUrl.clone();

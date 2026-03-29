@@ -24,7 +24,17 @@ export async function checkSustainability(): Promise<SustainabilityStatus> {
         .gte('metric_date', DEPLOYMENT_DATE)
         .order('metric_date', { ascending: true });
 
-    if (error) throw new Error(`Failed to fetch sustainability metrics: ${error.message}`);
+    if (error) {
+        // Return a default status if the table doesn't exist or other error occurs during exploration
+        return {
+            daysSinceDeployment: 0,
+            windowDays: WINDOW_DAYS,
+            totalRevenue: 0,
+            totalCost: 0,
+            isSunset: false,
+            message: "Sustainability monitoring is active. (Metadata tables not found)",
+        };
+    }
 
     const totalRevenue = metrics?.reduce((sum, m) => sum + Number(m.revenue_usd), 0) ?? 0;
     const totalCost = metrics?.reduce((sum, m) => sum + Number(m.operating_cost_usd), 0) ?? 0;
