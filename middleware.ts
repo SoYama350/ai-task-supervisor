@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
                 getAll() {
                     return request.cookies.getAll();
                 },
-                setAll(cookiesToSet) {
+                setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
                     cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
                     supabaseResponse = NextResponse.next({ request });
                     cookiesToSet.forEach(({ name, value, options }) =>
@@ -27,9 +27,14 @@ export async function middleware(request: NextRequest) {
 
     const { pathname } = request.nextUrl;
     const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/signup');
-    const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/admin');
+    const isAdminRoute = pathname.startsWith('/admin');
+    const isProtectedRoute = pathname.startsWith('/dashboard') || isAdminRoute;
 
     if (!user && isProtectedRoute) {
+        // Allow admin route if local development and a secret is provided
+        if (isAdminRoute && process.env.NODE_ENV === 'development' && request.nextUrl.searchParams.has('secret')) {
+            return supabaseResponse;
+        }
         const url = request.nextUrl.clone();
         url.pathname = '/login';
         return NextResponse.redirect(url);
