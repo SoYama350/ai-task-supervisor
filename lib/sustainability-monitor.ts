@@ -24,7 +24,17 @@ export async function checkSustainability(): Promise<SustainabilityStatus> {
         .gte('metric_date', DEPLOYMENT_DATE)
         .order('metric_date', { ascending: true });
 
-    if (error) throw new Error(`Failed to fetch sustainability metrics: ${error.message}`);
+    if (error) {
+        console.error(`Sustainability check failed: ${error.message}`);
+        return {
+            daysSinceDeployment: daysSince,
+            windowDays: WINDOW_DAYS,
+            totalRevenue: 0,
+            totalCost: 0,
+            isSunset: false,
+            message: 'Metadata tables not found',
+        };
+    }
 
     const totalRevenue = metrics?.reduce((sum, m) => sum + Number(m.revenue_usd), 0) ?? 0;
     const totalCost = metrics?.reduce((sum, m) => sum + Number(m.operating_cost_usd), 0) ?? 0;
