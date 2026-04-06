@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
                 getAll() {
                     return request.cookies.getAll();
                 },
-                setAll(cookiesToSet) {
+                setAll(cookiesToSet: { name: string; value: string; options: any }[]) {
                     cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
                     supabaseResponse = NextResponse.next({ request });
                     cookiesToSet.forEach(({ name, value, options }) =>
@@ -25,11 +25,14 @@ export async function middleware(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    const { pathname } = request.nextUrl;
+    const { pathname, searchParams } = request.nextUrl;
     const isAuthRoute = pathname.startsWith('/login') || pathname.startsWith('/signup');
     const isProtectedRoute = pathname.startsWith('/dashboard') || pathname.startsWith('/admin');
 
-    if (!user && isProtectedRoute) {
+    const adminSecret = searchParams.get('secret');
+    const isDevAdminAccess = pathname === '/admin' && adminSecret === process.env.ADMIN_SECRET && process.env.NODE_ENV === 'development';
+
+    if (!user && isProtectedRoute && !isDevAdminAccess) {
         const url = request.nextUrl.clone();
         url.pathname = '/login';
         return NextResponse.redirect(url);
