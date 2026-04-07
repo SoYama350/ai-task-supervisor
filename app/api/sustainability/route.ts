@@ -3,6 +3,8 @@ import { createServiceClient } from '@/lib/supabase/server';
 import { checkSustainability } from '@/lib/sustainability-monitor';
 
 /** GET /api/sustainability — Get current sustainability status */
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
     const supabase = createServiceClient();
 

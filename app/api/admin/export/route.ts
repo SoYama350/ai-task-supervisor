@@ -6,6 +6,8 @@ function verifyAdmin(req: NextRequest): boolean {
     return secret === process.env.ADMIN_SECRET;
 }
 
+export const dynamic = 'force-dynamic';
+
 /** GET /api/admin/export — Full data export as JSON */
 export async function GET(req: NextRequest) {
     if (!verifyAdmin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
