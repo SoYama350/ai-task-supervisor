@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+export const dynamic = "force-dynamic";
 import { parseTaskFromNaturalLanguage } from '@/lib/ai/parse-task';
 import { computeQuadrant, computePriorityScore } from '@/lib/ai/prioritize';
 import { isFeatureEnabled } from '@/lib/utils';
