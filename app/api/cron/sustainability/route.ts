@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { checkSustainability } from '@/lib/sustainability-monitor';
 
 /** POST /api/cron/sustainability — Daily cron job (called by Vercel) */
