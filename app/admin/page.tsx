@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -21,7 +21,7 @@ interface AdminStats {
     dailyUsage: { log_date: string; total_tokens: number; ai_calls: number; tasks_created: number }[];
 }
 
-export default function AdminPage() {
+function AdminContent() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -32,8 +32,11 @@ export default function AdminPage() {
 
     useEffect(() => {
         const s = searchParams.get('secret');
-        if (s) { setSecret(s); authenticate(s); }
-    }, []);
+        if (s) {
+            setSecret(s);
+            authenticate(s);
+        }
+    }, [searchParams]);
 
     async function authenticate(s?: string) {
         const sec = s ?? secret;
@@ -196,5 +199,17 @@ export default function AdminPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function AdminPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary" />
+            </div>
+        }>
+            <AdminContent />
+        </Suspense>
     );
 }
