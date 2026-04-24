@@ -74,8 +74,8 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         type: 'suggest',
         model: 'gpt-4o-mini',
-        prompt_tokens: promptTokens,
-        completion_tokens: completionTokens,
+        prompt_tokens: promptTokens ?? 0,
+        completion_tokens: completionTokens ?? 0,
         response_json: { suggestions },
     });
 
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         log_date: today,
         ai_calls: (usageLog?.ai_calls ?? 0) + 1,
-        total_tokens: (promptTokens + completionTokens),
+        total_tokens: (promptTokens ?? 0) + (completionTokens ?? 0),
     }, { onConflict: 'user_id,log_date' });
 
     return NextResponse.json({ suggestions, cached: false });

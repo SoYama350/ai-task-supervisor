@@ -30,8 +30,8 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         type: 'daily_plan',
         model: 'gpt-4o-mini',
-        prompt_tokens: promptTokens,
-        completion_tokens: completionTokens,
+        prompt_tokens: promptTokens ?? 0,
+        completion_tokens: completionTokens ?? 0,
         response_json: { plan },
     });
 

@@ -88,8 +88,8 @@ export async function POST(req: NextRequest) {
                 importance: parsed.importance,
                 quadrant: parsed.quadrant,
             };
-            promptTokens = parsed.promptTokens;
-            completionTokens = parsed.completionTokens;
+            promptTokens = parsed.promptTokens ?? 0;
+            completionTokens = parsed.completionTokens ?? 0;
 
             // Store AI insight
             await supabase.from('ai_insights').insert({
