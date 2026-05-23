@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
 import { createClient } from '@/lib/supabase/server';
 import { generateDailyPlan } from '@/lib/ai/daily-optimizer';
 import { isFeatureEnabled } from '@/lib/utils';
