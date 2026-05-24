@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { generateActionableSuggestions } from '@/lib/ai/suggest';
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Daily AI quota exceeded' }, { status: 429 });
     }
 
-    const { suggestions, promptTokens, completionTokens } = await generateActionableSuggestions(task);
+    const { suggestions, inputTokens, outputTokens } = await generateActionableSuggestions(task);
 
     // Cache the insight
     await supabase.from('ai_insights').insert({
@@ -74,8 +75,8 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         type: 'suggest',
         model: 'gpt-4o-mini',
-        prompt_tokens: promptTokens,
-        completion_tokens: completionTokens,
+        prompt_tokens: inputTokens,
+        completion_tokens: outputTokens,
         response_json: { suggestions },
     });
 
@@ -84,7 +85,7 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         log_date: today,
         ai_calls: (usageLog?.ai_calls ?? 0) + 1,
-        total_tokens: (promptTokens + completionTokens),
+        total_tokens: (inputTokens + outputTokens),
     }, { onConflict: 'user_id,log_date' });
 
     return NextResponse.json({ suggestions, cached: false });
