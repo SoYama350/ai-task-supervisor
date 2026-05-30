@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import { parseTaskFromNaturalLanguage } from '@/lib/ai/parse-task';
 import { computeQuadrant, computePriorityScore } from '@/lib/ai/prioritize';
 import { isFeatureEnabled } from '@/lib/utils';
+export const dynamic = "force-dynamic";
+
 
 /** GET /api/tasks — List all tasks for the authenticated user */
 export async function GET(req: NextRequest) {
@@ -71,8 +73,8 @@ export async function POST(req: NextRequest) {
         quadrant: number;
         raw_input?: string;
     };
-    let promptTokens = 0;
-    let completionTokens = 0;
+    let inputTokens = 0;
+    let outputTokens = 0;
 
     // If raw_input is provided and NLP feature is enabled, use AI parsing
     if (raw_input) {
@@ -88,16 +90,16 @@ export async function POST(req: NextRequest) {
                 importance: parsed.importance,
                 quadrant: parsed.quadrant,
             };
-            promptTokens = parsed.promptTokens;
-            completionTokens = parsed.completionTokens;
+            inputTokens = parsed.inputTokens;
+            outputTokens = parsed.outputTokens;
 
             // Store AI insight
             await supabase.from('ai_insights').insert({
                 user_id: user.id,
                 type: 'parse',
                 model: 'gpt-4o-mini',
-                prompt_tokens: promptTokens,
-                completion_tokens: completionTokens,
+                prompt_tokens: inputTokens,
+                completion_tokens: outputTokens,
                 response_json: { parsed: taskData },
             });
         } else {
@@ -131,14 +133,14 @@ export async function POST(req: NextRequest) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
     // Update usage log
-    const totalTokens = promptTokens + completionTokens;
+    const totalTokens = inputTokens + outputTokens;
     await supabase
         .from('usage_logs')
         .upsert({
             user_id: user.id,
             log_date: today,
             tasks_created: (usageLog?.tasks_created ?? 0) + 1,
-            ai_calls: promptTokens > 0 ? 1 : 0,
+            ai_calls: inputTokens > 0 ? 1 : 0,
             total_tokens: totalTokens,
         }, { onConflict: 'user_id,log_date' });
 
