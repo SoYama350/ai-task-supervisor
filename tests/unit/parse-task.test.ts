@@ -15,7 +15,7 @@ vi.mock('ai', () => ({
             urgency: 8,
             importance: 7,
         },
-        usage: { promptTokens: 120, completionTokens: 80 },
+        usage: { inputTokens: 120, outputTokens: 80 },
     }),
 }));
 

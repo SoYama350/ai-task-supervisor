@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { computeQuadrant } from '@/lib/ai/prioritize';
 
+export const dynamic = "force-dynamic";
 type Params = { params: { id: string } };
 
 /** PUT /api/tasks/[id] — Update task */

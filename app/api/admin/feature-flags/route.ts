@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 
+export const dynamic = "force-dynamic";
 function verifyAdmin(req: NextRequest): boolean {
     const secret = req.headers.get('x-admin-secret') ?? req.nextUrl.searchParams.get('secret');
     return secret === process.env.ADMIN_SECRET;

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { checkSustainability } from '@/lib/sustainability-monitor';
 
+export const dynamic = "force-dynamic";
 /** GET /api/sustainability — Get current sustainability status */
 export async function GET(req: NextRequest) {
     const supabase = createServiceClient();
