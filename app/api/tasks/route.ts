@@ -4,6 +4,8 @@ import { parseTaskFromNaturalLanguage } from '@/lib/ai/parse-task';
 import { computeQuadrant, computePriorityScore } from '@/lib/ai/prioritize';
 import { isFeatureEnabled } from '@/lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 /** GET /api/tasks — List all tasks for the authenticated user */
 export async function GET(req: NextRequest) {
     const supabase = createClient();
