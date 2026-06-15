@@ -56,8 +56,8 @@ vi.mock('@/lib/ai/parse-task', () => ({
         urgency: 7,
         importance: 6,
         quadrant: 1,
-        promptTokens: 95,
-        completionTokens: 60,
+        inputTokens: 95,
+        outputTokens: 60,
     }),
 }));
 
@@ -96,11 +96,11 @@ describe('Task Creation Integration', () => {
         expect(parsed.quadrant).toBe(expectedQuadrant);
     });
 
-    it('tracks prompt and completion tokens', async () => {
+    it('tracks input and output tokens', async () => {
         const { parseTaskFromNaturalLanguage } = await import('@/lib/ai/parse-task');
         const parsed = await parseTaskFromNaturalLanguage('test task for token tracking');
-        expect(parsed.promptTokens).toBeGreaterThan(0);
-        expect(parsed.completionTokens).toBeGreaterThan(0);
+        expect(parsed.inputTokens).toBeGreaterThan(0);
+        expect(parsed.outputTokens).toBeGreaterThan(0);
     });
 
     it('the created task has all required fields', () => {
