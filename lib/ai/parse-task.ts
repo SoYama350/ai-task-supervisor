@@ -34,7 +34,7 @@ const ParsedTaskSchema = z.object({
 export async function parseTaskFromNaturalLanguage(
     rawInput: string,
     currentDate: string = new Date().toISOString()
-): Promise<ParsedTask & { promptTokens: number; completionTokens: number }> {
+): Promise<ParsedTask & { inputTokens: number; outputTokens: number }> {
     const { object, usage } = await generateObject({
         model: openai('gpt-4o-mini'),
         schema: ParsedTaskSchema,
@@ -59,7 +59,7 @@ Guidelines:
         urgency: object.urgency,
         importance: object.importance,
         quadrant,
-        promptTokens: usage.promptTokens,
-        completionTokens: usage.completionTokens,
+        inputTokens: usage.inputTokens ?? 0,
+        outputTokens: usage.outputTokens ?? 0,
     };
 }
