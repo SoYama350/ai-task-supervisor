@@ -9,6 +9,7 @@ import {
 import {
     Users, CheckSquare, Zap, Star, Shield, ToggleLeft, ToggleRight, Download,
 } from 'lucide-react';
+import { Suspense } from 'react';
 import type { DbFeatureFlag } from '@/lib/types';
 
 interface AdminStats {
@@ -21,7 +22,7 @@ interface AdminStats {
     dailyUsage: { log_date: string; total_tokens: number; ai_calls: number; tasks_created: number }[];
 }
 
-export default function AdminPage() {
+function AdminDashboard() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -196,5 +197,17 @@ export default function AdminPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function AdminPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-muted-foreground animate-pulse">Loading Admin Dashboard...</p>
+            </div>
+        }>
+            <AdminDashboard />
+        </Suspense>
     );
 }
