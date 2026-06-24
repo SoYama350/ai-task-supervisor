@@ -1,7 +1,13 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
+
 import { createClient } from '@/lib/supabase/server';
+
 import { generateDailyPlan } from '@/lib/ai/daily-optimizer';
+
 import { isFeatureEnabled } from '@/lib/utils';
+
 
 /** POST /api/ai/prioritize — Generate daily optimized task plan */
 export async function POST(req: NextRequest) {
@@ -23,15 +29,15 @@ export async function POST(req: NextRequest) {
 
     if (tasksErr) return NextResponse.json({ error: tasksErr.message }, { status: 500 });
 
-    const { plan, promptTokens, completionTokens } = await generateDailyPlan(tasks ?? []);
+    const { plan, inputTokens, outputTokens } = await generateDailyPlan(tasks ?? []);
 
     // Store the insight
     await supabase.from('ai_insights').insert({
         user_id: user.id,
         type: 'daily_plan',
         model: 'gpt-4o-mini',
-        prompt_tokens: promptTokens,
-        completion_tokens: completionTokens,
+        prompt_tokens: inputTokens,
+        completion_tokens: outputTokens,
         response_json: { plan },
     });
 

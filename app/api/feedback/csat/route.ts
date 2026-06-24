@@ -1,5 +1,9 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
+
 import { createClient } from '@/lib/supabase/server';
+
 
 /** POST /api/feedback/csat — Submit a CSAT score */
 export async function POST(req: NextRequest) {

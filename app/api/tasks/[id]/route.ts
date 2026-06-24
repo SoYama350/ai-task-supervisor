@@ -1,6 +1,11 @@
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
+
 import { createClient } from '@/lib/supabase/server';
+
 import { computeQuadrant } from '@/lib/ai/prioritize';
+
 
 type Params = { params: { id: string } };
 
