@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { generateDailyPlan } from '@/lib/ai/daily-optimizer';
 import { isFeatureEnabled } from '@/lib/utils';
+export const dynamic = "force-dynamic";
 
 /** POST /api/ai/prioritize — Generate daily optimized task plan */
 export async function POST(req: NextRequest) {
