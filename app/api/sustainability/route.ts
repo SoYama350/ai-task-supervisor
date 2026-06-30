@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+
+export const dynamic = 'force-dynamic';
+
 import { createServiceClient } from '@/lib/supabase/server';
 import { checkSustainability } from '@/lib/sustainability-monitor';
 
