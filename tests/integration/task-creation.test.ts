@@ -56,7 +56,7 @@ vi.mock('@/lib/ai/parse-task', () => ({
         urgency: 7,
         importance: 6,
         quadrant: 1,
-        promptTokens: 95,
+        promptTokens: 95, // The function returns promptTokens, but internally uses inputTokens from SDK
         completionTokens: 60,
     }),
 }));
