@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { generateActionableSuggestions } from '@/lib/ai/suggest';
 import { isFeatureEnabled } from '@/lib/utils';
+export const dynamic = 'force-dynamic';
 
 /** POST /api/ai/suggest — Generate actionable suggestions for a task */
 export async function POST(req: NextRequest) {
