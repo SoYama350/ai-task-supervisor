@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
+import { Suspense } from 'react';
 import {
     Users, CheckSquare, Zap, Star, Shield, ToggleLeft, ToggleRight, Download,
 } from 'lucide-react';
@@ -21,7 +22,7 @@ interface AdminStats {
     dailyUsage: { log_date: string; total_tokens: number; ai_calls: number; tasks_created: number }[];
 }
 
-export default function AdminPage() {
+function AdminDashboard() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -33,7 +34,7 @@ export default function AdminPage() {
     useEffect(() => {
         const s = searchParams.get('secret');
         if (s) { setSecret(s); authenticate(s); }
-    }, []);
+    }, [searchParams]);
 
     async function authenticate(s?: string) {
         const sec = s ?? secret;
@@ -196,5 +197,13 @@ export default function AdminPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function AdminPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+            <AdminDashboard />
+        </Suspense>
     );
 }
