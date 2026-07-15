@@ -23,7 +23,7 @@ const SuggestionsSchema = z.object({
  */
 export async function generateActionableSuggestions(
     task: Pick<DbTask, 'title' | 'description' | 'deadline' | 'urgency' | 'importance'>
-): Promise<{ suggestions: ActionableSuggestion[]; promptTokens: number; completionTokens: number }> {
+): Promise<{ suggestions: ActionableSuggestion[]; inputTokens: number; outputTokens: number }> {
     const { object, usage } = await generateObject({
         model: openai('gpt-4o-mini'),
         schema: SuggestionsSchema,
@@ -43,7 +43,7 @@ Urgency: ${task.urgency}/10, Importance: ${task.importance}/10`,
 
     return {
         suggestions: object.suggestions,
-        promptTokens: usage.promptTokens,
-        completionTokens: usage.completionTokens,
+        inputTokens: usage.inputTokens ?? 0,
+        outputTokens: usage.outputTokens ?? 0,
     };
 }
