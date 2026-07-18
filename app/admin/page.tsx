@@ -21,7 +21,9 @@ interface AdminStats {
     dailyUsage: { log_date: string; total_tokens: number; ai_calls: number; tasks_created: number }[];
 }
 
-export default function AdminPage() {
+import { Suspense } from 'react';
+
+function AdminDashboard() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -88,7 +90,7 @@ export default function AdminPage() {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-8 max-w-sm w-full">
                     <div className="flex items-center gap-3 mb-6">
                         <Shield className="w-6 h-6 text-primary" />
-                        <h1 className="text-xl font-bold">Admin Access</h1>
+                        <h2 className="text-xl font-bold">Admin Access</h2>
                     </div>
                     <div className="space-y-4">
                         <input
@@ -196,5 +198,17 @@ export default function AdminPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function AdminPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-muted-foreground text-sm">Loading admin dashboard...</p>
+            </div>
+        }>
+            <AdminDashboard />
+        </Suspense>
     );
 }
