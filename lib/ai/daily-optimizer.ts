@@ -20,7 +20,7 @@ const DailyPlanSchema = z.object({
  */
 export async function generateDailyPlan(
     tasks: DbTask[]
-): Promise<{ plan: DailyPlanItem[]; promptTokens: number; completionTokens: number }> {
+): Promise<{ plan: DailyPlanItem[]; inputTokens: number; outputTokens: number }> {
     // Pre-sort by priority score for the AI to validate/reorder
     const pendingTasks = tasks
         .filter((t) => t.status === 'pending' || t.status === 'in_progress')
@@ -32,7 +32,7 @@ export async function generateDailyPlan(
         .slice(0, 10); // Limit to top 10 for focus
 
     if (pendingTasks.length === 0) {
-        return { plan: [], promptTokens: 0, completionTokens: 0 };
+        return { plan: [], inputTokens: 0, outputTokens: 0 };
     }
 
     const taskList = pendingTasks
@@ -67,7 +67,7 @@ Return all task IDs in your recommended order.`,
 
     return {
         plan,
-        promptTokens: usage.promptTokens,
-        completionTokens: usage.completionTokens,
+        inputTokens: usage.inputTokens ?? 0,
+        outputTokens: usage.outputTokens ?? 0,
     };
 }
