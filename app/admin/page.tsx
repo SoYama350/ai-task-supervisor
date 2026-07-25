@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -22,6 +22,18 @@ interface AdminStats {
 }
 
 export default function AdminPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center p-4">
+                <div className="text-muted-foreground text-sm">Loading admin panel...</div>
+            </div>
+        }>
+            <AdminDashboard />
+        </Suspense>
+    );
+}
+
+function AdminDashboard() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
