@@ -15,7 +15,7 @@ vi.mock('ai', () => ({
             urgency: 8,
             importance: 7,
         },
-        usage: { promptTokens: 120, completionTokens: 80 },
+        usage: { inputTokens: 120, outputTokens: 80 },
     }),
 }));
 
@@ -47,8 +47,8 @@ describe('parseTaskFromNaturalLanguage', () => {
     it('returns token usage counts', async () => {
         const { parseTaskFromNaturalLanguage } = await import('@/lib/ai/parse-task');
         const result = await parseTaskFromNaturalLanguage('test task');
-        expect(result.promptTokens).toBe(120);
-        expect(result.completionTokens).toBe(80);
+        expect(result.inputTokens).toBe(120);
+        expect(result.outputTokens).toBe(80);
     });
 
     it('correctly computes quadrant Q1 for high urgency + high importance', async () => {
