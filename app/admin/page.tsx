@@ -21,7 +21,9 @@ interface AdminStats {
     dailyUsage: { log_date: string; total_tokens: number; ai_calls: number; tasks_created: number }[];
 }
 
-export default function AdminPage() {
+import { Suspense } from 'react';
+
+function AdminDashboard() {
     const [secret, setSecret] = useState('');
     const [authed, setAuthed] = useState(false);
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -196,5 +198,13 @@ export default function AdminPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function AdminPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading admin panel...</div>}>
+            <AdminDashboard />
+        </Suspense>
     );
 }
