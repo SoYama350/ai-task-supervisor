@@ -43,7 +43,7 @@ Urgency: ${task.urgency}/10, Importance: ${task.importance}/10`,
 
     return {
         suggestions: object.suggestions,
-        promptTokens: usage.promptTokens,
-        completionTokens: usage.completionTokens,
+        promptTokens: usage.inputTokens ?? 0,
+        completionTokens: usage.outputTokens ?? 0,
     };
 }
