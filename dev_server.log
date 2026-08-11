@@ -1,0 +1,22 @@
+
+> ai-task-supervisor@0.1.0 dev
+> next dev -H 0.0.0.0
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+  - Network:      http://0.0.0.0:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1822ms
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 1244ms (168 modules)
+ ○ Compiling /login ...
+Browserslist: browsers data (caniuse-lite) is 6 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ✓ Compiled /login in 7.9s (1378 modules)
+ GET /login 200 in 8365ms
+ ✓ Compiled in 772ms (687 modules)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (133kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ GET /login?secret=change-me-to-a-secure-random-string 200 in 93ms
